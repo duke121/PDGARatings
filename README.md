@@ -5,14 +5,16 @@ This project generates csv files that can be used in flourish to create a chart 
 1. 
 In getPlayers.py, change the state, gender, etc. values to your liking and run
 ```
-python getPlayers.py```
+python getPlayers.py
+```
 
 This can take up to an hour depending on your internet speed.
 
 2. 
 Then in fixData.py change the input file name to match the .csv file you just generated and run fixData.py
 ```
-python fixData.py```
+python fixData.py
+```
 
 Your formatted file will have the filename + _decayed
 
