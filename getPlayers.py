@@ -103,22 +103,48 @@ def getPlayerHistory(pdganum, target_year, retries=3, delay=1.1):
     return []
 
 #TODO add ability for more players (more pages)
-def getPlayerList(year, state, div):
+def getPlayerList(year, state, div, pages=2):
     playerList = []
-    
-    r = requests.get("https://www.pdga.com/players/stats?Year=" + str(year) + "&player_Class=1&Gender=" + div + "&Bracket=All&continent=All&Country=All&StateProv=" + state + "&order=player_Rating&sort=desc")
-    html = r.content.decode("utf-8")
-    parser = etree.HTMLParser()
-    tree = etree.parse(StringIO(html), parser)
-    root = tree.getroot()
-    rows = root.xpath('//*[@id="block-system-main"]//table/tbody/tr')
 
-    for row in rows:
-        name = row.xpath('./td[1]/a/text()')
-        number = row.xpath('./td[2]/text()')
+    base_url = (
+        "https://www.pdga.com/players/stats?"
+        f"Year={year}"
+        f"&player_Class=1"
+        f"&Gender={div}"
+        f"&Bracket=All"
+        f"&continent=All"
+        f"&Country=All"
+        f"&StateProv={state}"
+        f"&order=player_Rating"
+        f"&sort=desc"
+    )
 
-        if name and number:
-            playerList.append((number[0].strip(), name[0].strip()))
+    for page in range(pages):
+        if page == 0:
+            url = base_url
+        else:
+            url = f"{base_url}&page={page}"
+
+        r = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+        html = r.content.decode("utf-8")
+
+        parser = etree.HTMLParser()
+        tree = etree.parse(StringIO(html), parser)
+        root = tree.getroot()
+
+        rows = root.xpath('//*[@id="block-system-main"]//table/tbody/tr')
+
+        if not rows:
+            break
+
+        for row in rows:
+            name = row.xpath('./td[1]/a/text()')
+            number = row.xpath('./td[2]/text()')
+
+            if name and number:
+                playerList.append((number[0].strip(), name[0].strip()))
+
+        time.sleep(1.1)
 
     return list(dict.fromkeys(playerList))
 
