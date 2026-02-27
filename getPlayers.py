@@ -10,6 +10,7 @@ import re
 # Gender: Male, Female, All
 gender = "All"
 state = "MA"
+file_name = f"pdga_history_{state}.csv"
 
 def get_join_year(pdganum, retries=3, delay=1):
     url = f"https://www.pdga.com/player/{pdganum}"
@@ -245,4 +246,4 @@ dataset = genDataset()
 rows, player_categories = flatten_dataset(dataset)
 filled = forward_fill(rows)
 
-pivot_with_category(filled, player_categories, "pdga_history_MA.csv")
+pivot_with_category(filled, player_categories, file_name)

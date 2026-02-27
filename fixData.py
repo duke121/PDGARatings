@@ -3,6 +3,8 @@ from datetime import datetime
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
+input_file = "pdga_history_MA.csv"
+
 def apply_decay_to_pivot(input_file, output_file):
     with open(input_file, newline="", encoding="utf-8") as f:
         reader = list(csv.reader(f))
@@ -51,6 +53,6 @@ def apply_decay_to_pivot(input_file, output_file):
 
 
 apply_decay_to_pivot(
-    "pdga_history_MA.csv",
-    "pdga_history_MA_decayed.csv"
+    input_file,
+    f"{input_file.replace('.csv', '_decayed.csv')}"
 )
